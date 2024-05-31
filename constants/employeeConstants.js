@@ -34,3 +34,11 @@ export const employeePosList = [
   "Systems administrator",
   "HR Recruiter",
 ];
+
+export const employeeStatusList = [
+  "workday",
+  "day off",
+  "vacation",
+  "sick day",
+  "not specified"
+];
