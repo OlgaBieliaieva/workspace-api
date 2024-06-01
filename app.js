@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
 
-// import contactsRouter from "./routes/contactsRouter.js";
+import employeesRouter from "./routes/contacts-routes/employeesRouter.js";
 
 const { DB_CONTACTS_HOST, PORT = 3000 } = process.env;
 
@@ -14,7 +14,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
-// app.use("/api/contacts", contactsRouter);
+app.use("/api/contacts/employees", employeesRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });

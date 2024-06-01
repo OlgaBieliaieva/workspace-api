@@ -52,12 +52,12 @@ const employeeSchema = new Schema(
       linkedIn: String,
       facebook: String,
     },
-    groups: {
-      type: [String],
-    },
     isActive: {
       type: Boolean,
       default: false,
+    },
+    groups: {
+      type: [String],
     },
     status: {
       type: String,

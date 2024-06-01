@@ -1,50 +1,60 @@
 import express from "express";
 import {
-  //   getAllContacts,
-  //   getOneContact,
-  //   deleteContact,
+  getAllEmployees,
+  getEmployeeById,
+  deleteById,
   createEmployee,
-  //   updateContact,
-  //   updateStatusContact,
-} from "../controllers/contactsControllers.js";
-import isEmptyBody from "../middlewares/isEmptyBody.js";
-// import isValidId from "../middlewares/isValidId.js";
-import validateBody from "../helpers/validateBody.js";
+  updateEmployee,
+  updateEmployeeStatus,
+  updateEmployeeGroups,
+} from "../../controllers/employeesControllers.js";
+import isEmptyBody from "../../middlewares/isEmptyBody.js";
+import isValidId from "../../middlewares/isValidId.js";
+import validateBody from "../../helpers/validateBody.js";
 import {
   createEmployeeSchema,
-  //   updateContactSchema,
-  //   updateStatusContactSchema,
-} from "../schemas/employeesSchema";
+  updateEmployeeSchema,
+  updateEmployeeStatusSchema,
+  updateEmployeeGroupsSchema,
+} from "../../schemas/employeesSchema.js";
 
 const employeesRouter = express.Router();
 
-// employeesRouter.get("/", getAllContacts);
+employeesRouter.get("/", getAllEmployees);
 
-// contactsRouter.get("/:id", isValidId, getOneContact);
+employeesRouter.get("/:id", isValidId, getEmployeeById);
 
-// contactsRouter.delete("/:id", isValidId, deleteContact);
+employeesRouter.delete("/:id", isValidId, deleteById);
 
-contactsRouter.post(
+employeesRouter.post(
   "/",
   isEmptyBody,
   validateBody(createEmployeeSchema),
   createEmployee
 );
 
-// contactsRouter.put(
-//   "/:id",
-//   isValidId,
-//   isEmptyBody,
-//   validateBody(updateContactSchema),
-//   updateContact
-// );
+employeesRouter.put(
+  "/:id",
+  isValidId,
+  isEmptyBody,
+  validateBody(updateEmployeeSchema),
+  updateEmployee
+);
 
-// contactsRouter.patch(
-//   "/:id/favorite",
-//   isValidId,
-//   isEmptyBody,
-//   validateBody(updateStatusContactSchema),
-//   updateStatusContact
-// );
+employeesRouter.patch(
+  "/:id/status",
+  isValidId,
+  isEmptyBody,
+  validateBody(updateEmployeeStatusSchema),
+  updateEmployeeStatus
+);
+
+employeesRouter.patch(
+  "/:id/groups",
+  isValidId,
+  isEmptyBody,
+  validateBody(updateEmployeeGroupsSchema),
+  updateEmployeeGroups
+);
 
 export default employeesRouter;
