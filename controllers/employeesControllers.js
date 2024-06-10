@@ -1,107 +1,90 @@
+import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as employeesService from "../services/employeesServices.js";
 
-export const getAllEmployees = async (req, res, next) => {
-  try {
-    const { page = 1, limit = 20, ...params } = req.query;
-    const filter = { ...params };
-    const fields = "-createdAt -updatedAt";
-    const skip = (page - 1) * limit;
-    const settings = { skip, limit };
-    const result = await employeesService.getAll({
-      filter,
-      fields,
-      settings,
-    });
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
+const getAllEmployees = async (req, res) => {
+  const { page = 1, limit = 20, ...params } = req.query;
+  const filter = { ...params };
+  const fields = "-createdAt -updatedAt";
+  const skip = (page - 1) * limit;
+  const settings = { skip, limit };
+  const result = await employeesService.getAll({
+    filter,
+    fields,
+    settings,
+  });
+  res.json(result);
 };
 
-export const getEmployeeById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await employeesService.getById({ _id: id });
-    if (!result) {
-      throw HttpError(404, "Not found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+const getEmployeeById = async (req, res) => {
+  const { id } = req.params;
+  const result = await employeesService.getById({ _id: id });
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
+  res.json(result);
 };
 
-export const deleteById = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await employeesService.removeEmployee({ _id: id });
-    if (!result) {
-      throw HttpError(404, "Not found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const result = await employeesService.removeEmployee({ _id: id });
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
+  res.json(result);
 };
 
-export const createEmployee = async (req, res, next) => {
-  try {
-    const result = await employeesService.addEmployee({ ...req.body });
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
+const createEmployee = async (req, res) => {
+  const result = await employeesService.addEmployee({ ...req.body });
+  res.status(201).json(result);
 };
 
-export const updateEmployee = async (req, res, next) => {
-  try {
-    const { id } = req.params;
+const updateEmployee = async (req, res) => {
+  const { id } = req.params;
 
-    const result = await employeesService.updateEmployeeById(
-      { _id: id },
-      req.body
-    );
-    if (!result) {
-      throw HttpError(404, "Not found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+  const result = await employeesService.updateEmployeeById(
+    { _id: id },
+    req.body
+  );
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
+  res.json(result);
 };
 
-export const updateEmployeeStatus = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await employeesService.updateEmployeeById(
-      { _id: id },
-      req.body
-    );
+const updateEmployeeStatus = async (req, res) => {
+  const { id } = req.params;
+  const result = await employeesService.updateEmployeeById(
+    { _id: id },
+    req.body
+  );
 
-    if (!result) {
-      throw HttpError(404, "Not found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
+  res.json(result);
 };
 
-export const updateEmployeeGroups = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const employee = await employeesService.getById({ _id: id });
+const updateEmployeeGroups = async (req, res) => {
+  const { id } = req.params;
+  const employee = await employeesService.getById({ _id: id });
 
-    const result = await employeesService.updateEmployeeById(
-      { _id: id },
-      { groups: [...employee.groups, req.body.group] }
-    );
+  const result = await employeesService.updateEmployeeById(
+    { _id: id },
+    { groups: [...employee.groups, req.body.group] }
+  );
 
-    if (!result) {
-      throw HttpError(404, "Not found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
+  res.json(result);
+};
+
+export default {
+  getAllEmployees: ctrlWrapper(getAllEmployees),
+  getEmployeeById: ctrlWrapper(getEmployeeById),
+  deleteById: ctrlWrapper(deleteById),
+  createEmployee: ctrlWrapper(createEmployee),
+  updateEmployee: ctrlWrapper(updateEmployee),
+  updateEmployeeStatus: ctrlWrapper(updateEmployeeStatus),
+  updateEmployeeGroups: ctrlWrapper(updateEmployeeGroups),
 };

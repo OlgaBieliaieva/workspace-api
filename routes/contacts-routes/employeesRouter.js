@@ -1,13 +1,5 @@
 import express from "express";
-import {
-  getAllEmployees,
-  getEmployeeById,
-  deleteById,
-  createEmployee,
-  updateEmployee,
-  updateEmployeeStatus,
-  updateEmployeeGroups,
-} from "../../controllers/employeesControllers.js";
+import employeesControllers from "../../controllers/employeesControllers.js";
 import isEmptyBody from "../../middlewares/isEmptyBody.js";
 import isValidId from "../../middlewares/isValidId.js";
 import validateBody from "../../helpers/validateBody.js";
@@ -20,17 +12,17 @@ import {
 
 const employeesRouter = express.Router();
 
-employeesRouter.get("/", getAllEmployees);
+employeesRouter.get("/", employeesControllers.getAllEmployees);
 
-employeesRouter.get("/:id", isValidId, getEmployeeById);
+employeesRouter.get("/:id", isValidId, employeesControllers.getEmployeeById);
 
-employeesRouter.delete("/:id", isValidId, deleteById);
+employeesRouter.delete("/:id", isValidId, employeesControllers.deleteById);
 
 employeesRouter.post(
   "/",
   isEmptyBody,
   validateBody(createEmployeeSchema),
-  createEmployee
+  employeesControllers.createEmployee
 );
 
 employeesRouter.put(
@@ -38,7 +30,7 @@ employeesRouter.put(
   isValidId,
   isEmptyBody,
   validateBody(updateEmployeeSchema),
-  updateEmployee
+  employeesControllers.updateEmployee
 );
 
 employeesRouter.patch(
@@ -46,7 +38,7 @@ employeesRouter.patch(
   isValidId,
   isEmptyBody,
   validateBody(updateEmployeeStatusSchema),
-  updateEmployeeStatus
+  employeesControllers.updateEmployeeStatus
 );
 
 employeesRouter.patch(
@@ -54,7 +46,7 @@ employeesRouter.patch(
   isValidId,
   isEmptyBody,
   validateBody(updateEmployeeGroupsSchema),
-  updateEmployeeGroups
+  employeesControllers.updateEmployeeGroups
 );
 
 export default employeesRouter;
