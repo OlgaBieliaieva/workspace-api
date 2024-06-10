@@ -6,6 +6,9 @@ import "dotenv/config";
 
 import employeesRouter from "./routes/contacts-routes/employeesRouter.js";
 import companiesRouter from "./routes/contacts-routes/companiesRouter.js";
+import suppliersRouter from "./routes/contacts-routes/suppliersRouter.js";
+import clientsRouter from "./routes/contacts-routes/clientsRouter.js";
+import groupsRouter from "./routes/contacts-routes/groupsRouter.js";
 
 const { DB_CONTACTS_HOST, PORT = 3000 } = process.env;
 
@@ -17,6 +20,9 @@ app.use(express.json());
 
 app.use("/api/contacts/employees", employeesRouter);
 app.use("/api/contacts/companies", companiesRouter);
+app.use("/api/contacts/suppliers", suppliersRouter);
+app.use("/api/contacts/clients", clientsRouter);
+app.use("/api/contacts/groups", groupsRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });
