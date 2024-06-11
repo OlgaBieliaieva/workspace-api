@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
@@ -18,6 +19,10 @@ const companySchema = new Schema(
     companyCode: {
       type: String,
       required: [true, "Set company tax payment code"],
+    },
+    companyIBAN: {
+      type: String,
+      default: "",
     },
     companyLogoUrl: {
       type: String,
@@ -61,6 +66,6 @@ companySchema.pre("findOneAndUpdate", setUpdateSettings);
 
 companySchema.post("findOneAndUpdate", handleSaveError);
 
-const Company = model("company", companySchema);
+const Company = contactsDB.model("company", companySchema);
 
 export default Company;

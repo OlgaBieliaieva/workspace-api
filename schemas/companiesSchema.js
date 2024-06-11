@@ -7,6 +7,7 @@ export const createCompanySchema = Joi.object({
     .valid(...companyOrgList)
     .required(),
   companyCode: Joi.string().required(),
+  companyIBAN: Joi.string(),
   companyField: Joi.string().required(),
   companyCountry: Joi.string().required(),
   companyCity: Joi.string().required(),
@@ -23,6 +24,7 @@ export const updateCompanySchema = Joi.object({
   companyName: Joi.string(),
   companyOrg: Joi.string().valid(...companyOrgList),
   companyCode: Joi.string(),
+  companyIBAN: Joi.string(),
   companyField: Joi.string(),
   companyCountry: Joi.string(),
   companyCity: Joi.string(),

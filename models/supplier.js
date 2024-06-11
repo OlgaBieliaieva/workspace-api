@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
@@ -72,6 +73,6 @@ supplierSchema.pre("findOneAndUpdate", setUpdateSettings);
 
 supplierSchema.post("findOneAndUpdate", handleSaveError);
 
-const Supplier = model("supplier", supplierSchema);
+const Supplier = contactsDB.model("supplier", supplierSchema);
 
 export default Supplier;

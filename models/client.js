@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
@@ -76,6 +77,6 @@ clientSchema.pre("findOneAndUpdate", setUpdateSettings);
 
 clientSchema.post("findOneAndUpdate", handleSaveError);
 
-const Client = model("client", clientSchema);
+const Client = contactsDB.model("client", clientSchema);
 
 export default Client;

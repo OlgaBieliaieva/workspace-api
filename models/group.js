@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
@@ -44,6 +45,6 @@ groupSchema.pre("findOneAndUpdate", setUpdateSettings);
 
 groupSchema.post("findOneAndUpdate", handleSaveError);
 
-const Group = model("group", groupSchema);
+const Group = contactsDB.model("group", groupSchema);
 
 export default Group;
