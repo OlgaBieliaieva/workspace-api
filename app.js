@@ -9,6 +9,8 @@ import suppliersRouter from "./routes/contacts-routes/suppliersRouter.js";
 import clientsRouter from "./routes/contacts-routes/clientsRouter.js";
 import groupsRouter from "./routes/contacts-routes/groupsRouter.js";
 
+import usersRouter from "./routes/users-routes/usersRouter.js";
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -23,6 +25,8 @@ app.use("/api/contacts/suppliers", suppliersRouter);
 app.use("/api/contacts/clients", clientsRouter);
 app.use("/api/contacts/groups", groupsRouter);
 
+app.use("/api/users", usersRouter);
+
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });
 });
@@ -32,9 +36,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-
-
 app.listen(PORT, () => {
   console.log(`Server is running. Use our API on port: ${PORT}`);
 });
-

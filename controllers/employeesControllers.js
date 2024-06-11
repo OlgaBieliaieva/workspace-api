@@ -17,7 +17,7 @@ const getAllEmployees = async (req, res) => {
 
 const getEmployeeById = async (req, res) => {
   const { id } = req.params;
-  const result = await employeesService.getById({ _id: id });
+  const result = await employeesService.getOne({ _id: id });
   if (!result) {
     throw HttpError(404, "Not found");
   }
