@@ -1,6 +1,11 @@
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as usersService from "../services/usersServices.js";
 import * as employeesService from "../services/employeesServices.js";
+import * as suppliersService from "../services/suppliersServices.js";
+import * as clientsService from "../services/clientsServices.js";
+import HttpError from "../helpers/HttpErrors.js";
+import compareHash from "../helpers/compareHash.js";
+import { createToken } from "../helpers/jwt.js";
 
 const signup = async (req, res) => {
   const { email } = req.body;
@@ -9,9 +14,15 @@ const signup = async (req, res) => {
     throw HttpError(409, "Email in use");
   }
   let status = "guest";
-  const isEmployee = await employeesService.getOne({ email });
-  if (isEmployee) {
+  const employee = await employeesService.getOne({ email });
+  const supplier = await suppliersService.getOne({ email });
+  const client = await clientsService.getOne({ email });
+  if (employee) {
     status = "employee";
+  } else if (supplier) {
+    status = "supplier";
+  } else if (client) {
+    status = "client";
   }
   const newUser = await usersService.saveUser({ ...req.body, status });
 
@@ -26,7 +37,7 @@ const signup = async (req, res) => {
   res.status(201).json({
     token,
     user: {
-      id: newUser._id,
+      name: [`${status}`].firstName,
       email: newUser.email,
       status: newUser.status,
     },
@@ -63,16 +74,15 @@ const signIn = async (req, res) => {
   });
 };
 
-// const getCurrent = (req, res) => {
-//   const { _id: id, name, email } = req.user;
-//   res.json({
-//     user: {
-//       id,
-//       name,
-//       email,
-//     },
-//   });
-// };
+const getCurrent = (req, res) => {
+  const { _id: id, email } = req.user;
+  res.json({
+    user: {
+      id,
+      email,
+    },
+  });
+};
 
 const signOut = async (req, res) => {
   const { _id } = req.user;
@@ -83,6 +93,6 @@ const signOut = async (req, res) => {
 export default {
   signup: ctrlWrapper(signup),
   signIn: ctrlWrapper(signIn),
-  //   getCurrent: ctrlWrapper(getCurrent),
+  getCurrent: ctrlWrapper(getCurrent),
   signOut: ctrlWrapper(signOut),
 };

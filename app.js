@@ -19,13 +19,15 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", usersRouter);
+
 app.use("/api/contacts/employees", employeesRouter);
 app.use("/api/contacts/companies", companiesRouter);
 app.use("/api/contacts/suppliers", suppliersRouter);
 app.use("/api/contacts/clients", clientsRouter);
 app.use("/api/contacts/groups", groupsRouter);
 
-app.use("/api/users", usersRouter);
+
 
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });

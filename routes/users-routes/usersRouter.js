@@ -1,7 +1,8 @@
 import express from "express";
-import usersControllers from "../../controllers/usersController.js";
+import usersControllers from "../../controllers/usersControllers.js";
 import isEmptyBody from "../../middlewares/isEmptyBody.js";
 import isValidId from "../../middlewares/isValidId.js";
+import authenticate from "../../middlewares/authenticate.js";
 import validateBody from "../../helpers/validateBody.js";
 import {
   signUserSchema,
@@ -26,7 +27,7 @@ usersRouter.post(
   usersControllers.signIn
 );
 
-//   usersRouter.get("/current", authenticate, usersControllers.getCurrent);
+usersRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 usersRouter.post("/signout", authenticate, usersControllers.signOut);
 

@@ -5,7 +5,7 @@ export function getAll(search = {}) {
   return Supplier.find(filter, fields, settings);
 }
 
-export async function getById(filter) {
+export async function getOne(filter) {
   const result = await Supplier.findOne(filter);
   return result;
 }

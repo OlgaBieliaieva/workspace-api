@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
 
 const getClientById = async (req, res) => {
   const { id } = req.params;
-  const result = await clientsService.getById({ _id: id });
+  const result = await clientsService.getOne({ _id: id });
   if (!result) {
     throw HttpError(404, "Not found");
   }

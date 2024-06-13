@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
 
 const getSupplierById = async (req, res) => {
   const { id } = req.params;
-  const result = await suppliersService.getById({ _id: id });
+  const result = await suppliersService.getOne({ _id: id });
   if (!result) {
     throw HttpError(404, "Not found");
   }
