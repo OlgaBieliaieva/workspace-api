@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema } from "mongoose";
 import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
@@ -55,6 +55,24 @@ const companySchema = new Schema(
     socials: {
       linkedIn: String,
       facebook: String,
+    },
+    website: {
+      type: String,
+      default: ""
+    },
+    companyType: {
+      type: String,
+      enum: ['client', 'supplier', 'other'],
+      required: true,
+    },
+    employees: [{ 
+      type: Schema.Types.ObjectId, 
+      ref: 'Contact' 
+    }],
+    createdBy: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
     },
   },
   { versionKey: false, timestamps: true }

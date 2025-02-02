@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema } from "mongoose";
 import { contactsDB } from "../db.js";
 
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
@@ -9,32 +9,32 @@ const groupSchema = new Schema(
       type: String,
       required: [true, "Set group name"],
     },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "employee",
-    },
-    admins: {
-      type: [Schema.Types.ObjectId],
-      ref: "employee",
-    },
-    members: {
-      type: [Schema.Types.ObjectId],
-      ref: "employee",
-      ref: "supplier",
-      ref: "client",
+    groupDescription: {
+      type: String,
+      default: "",
     },
     avatarUrl: {
       type: String,
       default: "",
     },
+    admins: {
+      type: [Schema.Types.ObjectId],
+      ref: "Contact",
+    },
+    members: {
+      type: [Schema.Types.ObjectId],
+      ref: "Contact",
+    },    
     isActive: {
       type: Boolean,
       default: true,
     },
-    note: {
-      type: String,
-      default: "",
+    createdBy: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
     },
+    
   },
   { versionKey: false, timestamps: true }
 );
