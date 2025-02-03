@@ -5,6 +5,11 @@ import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      unique: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -14,14 +19,17 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    status: {
+    subscriptionType: {
       type: String,
-      default: "guest",
+      enum: ["Free", "Premium"],
+      default: "Free",
     },
-    role: {
-      type: String,
-      default: "user",
-    },
+    workspaces: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+      },
+    ],
     token: {
       type: String,
       default: null,

@@ -1,8 +1,19 @@
 import { Schema } from "mongoose";
 import { contactsDB } from "../db.js";
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
-
 import { employeeStatusList } from "../constants/employeeConstants.js";
+
+const phoneSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["work", "home", "mobile", "other"],
+      default: "mobile",
+    },
+    number: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const contactSchema = new Schema(
   {
@@ -51,27 +62,31 @@ const contactSchema = new Schema(
       type: String,
       default: "",
     },
-    phone: {
-      type: String,
-      required: [true, "Set phone"],
-    },
+    phones: [phoneSchema],
     socials: {
       linkedIn: String,
       facebook: String,
+      telegram: String,
     },
     isActive: {
       type: Boolean,
       default: false,
     },
-    isPublic: {
-      type: Boolean,
-      default: false,
-    },
+    // isPublic: {
+    //   type: Boolean,
+    //   default: false,
+    // },
     status: {
       type: String,
       enum: employeeStatusList,
       default: "not specified",
     },
+    sharedWorkspaces: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+      },
+    ],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

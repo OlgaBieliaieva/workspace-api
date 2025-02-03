@@ -5,7 +5,8 @@ import isValidId from "../../middlewares/isValidId.js";
 import authenticate from "../../middlewares/authenticate.js";
 import validateBody from "../../helpers/validateBody.js";
 import {
-  signUserSchema,
+  signUpUserSchema,
+  signInUserSchema,
   //   updateEmployeeSchema,
   //   updateEmployeeStatusSchema,
   //   updateEmployeeGroupsSchema,
@@ -16,14 +17,14 @@ const usersRouter = express.Router();
 usersRouter.post(
   "/signup",
   isEmptyBody,
-  validateBody(signUserSchema),
+  validateBody(signUpUserSchema),
   usersControllers.signup
 );
 
 usersRouter.post(
   "/signin",
   isEmptyBody,
-  validateBody(signUserSchema),
+  validateBody(signInUserSchema),
   usersControllers.signIn
 );
 

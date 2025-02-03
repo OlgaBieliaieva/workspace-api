@@ -58,21 +58,29 @@ const companySchema = new Schema(
     },
     website: {
       type: String,
-      default: ""
+      default: "",
     },
     companyType: {
       type: String,
-      enum: ['client', 'supplier', 'other'],
+      enum: ["client", "supplier", "other"],
       required: true,
     },
-    employees: [{ 
-      type: Schema.Types.ObjectId, 
-      ref: 'Contact' 
-    }],
-    createdBy: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'User', 
-      required: true 
+    employees: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Contact",
+      },
+    ],
+    sharedWorkspaces: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+      },
+    ],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { versionKey: false, timestamps: true }

@@ -1,8 +1,5 @@
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as usersService from "../services/usersServices.js";
-import * as employeesService from "../services/employeesServices.js";
-import * as suppliersService from "../services/suppliersServices.js";
-import * as clientsService from "../services/clientsServices.js";
 import HttpError from "../helpers/HttpErrors.js";
 import compareHash from "../helpers/compareHash.js";
 import { createToken } from "../helpers/jwt.js";
@@ -13,22 +10,15 @@ const signup = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
-  let status = "guest";
-  const employee = await employeesService.getOne({ email });
-  const supplier = await suppliersService.getOne({ email });
-  const client = await clientsService.getOne({ email });
-  if (employee) {
-    status = "employee";
-  } else if (supplier) {
-    status = "supplier";
-  } else if (client) {
-    status = "client";
-  }
-  const newUser = await usersService.saveUser({ ...req.body, status });
 
-  const { _id: id } = newUser;
+  const newUser = await usersService.saveUser({
+    ...req.body,
+  });
+
+  const { _id: id, subscriptionType: subscription } = newUser;
   const payload = {
     id,
+    subscription,
   };
 
   const token = createToken(payload);
@@ -37,9 +27,10 @@ const signup = async (req, res) => {
   res.status(201).json({
     token,
     user: {
-      name: newUser.firstName,
+      id: newUser._id,
+      name: newUser.name,
       email: newUser.email,
-      status: newUser.status,
+      subscription: newUser.subscriptionType,
     },
   });
 };
@@ -56,9 +47,10 @@ const signIn = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const { _id: id } = user;
+  const { _id: id, subscriptionType: subscription } = user;
   const payload = {
     id,
+    subscription,
   };
 
   const token = createToken(payload);
@@ -68,18 +60,21 @@ const signIn = async (req, res) => {
     token,
     user: {
       id: user._id,
+      name: user.name,
       email: user.email,
-      status: user.status,
+      subscription: user.subscriptionType,
     },
   });
 };
 
 const getCurrent = (req, res) => {
-  const { _id: id, email } = req.user;
+  const { _id: id, name, email, subscriptionType: subscription } = req.user;
   res.json({
     user: {
+      name,
       id,
       email,
+      subscription,
     },
   });
 };

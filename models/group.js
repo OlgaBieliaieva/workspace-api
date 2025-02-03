@@ -17,10 +17,10 @@ const groupSchema = new Schema(
       type: String,
       default: "",
     },
-    admins: {
-      type: [Schema.Types.ObjectId],
-      ref: "Contact",
-    },
+    // admins: {
+    //   type: [Schema.Types.ObjectId],
+    //   ref: "Contact",
+    // },
     members: {
       type: [Schema.Types.ObjectId],
       ref: "Contact",

@@ -19,6 +19,12 @@ const contactNoteSchema = new Schema(
       type: String,
       required: true,
     },
+    sharedWorkspaces: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Workspace",
+      },
+    ],
   },
   { versionKey: false, timestamps: true }
 );
