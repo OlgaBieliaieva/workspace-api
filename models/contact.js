@@ -1,7 +1,6 @@
 import { Schema } from "mongoose";
 import { contactsDB } from "../db.js";
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
-import { employeeStatusList } from "../constants/employeeConstants.js";
 
 const phoneSchema = new mongoose.Schema(
   {
@@ -11,6 +10,37 @@ const phoneSchema = new mongoose.Schema(
       default: "mobile",
     },
     number: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const emailSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["work", "personal", "other"],
+      default: "work",
+    },
+    address: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const socialSchema = new mongoose.Schema(
+  {
+    platform: {
+      type: String,
+      enum: [
+        "LinkedIn",
+        "Facebook",
+        "Telegram",
+        "Twitter",
+        "Instagram",
+        "Other",
+      ],
+      required: true,
+    },
+    url: { type: String, required: true },
   },
   { _id: false }
 );
@@ -27,19 +57,25 @@ const contactSchema = new Schema(
     },
     middleName: {
       type: String,
-      default: "",
+      default: null,
     },
-    avatarUrl: {
-      type: String,
-      default: "",
+    avatar: {
+      avatarId: {
+        type: String,
+        default: null,
+      },
+      avatarUrl: {
+        type: String,
+        default: null,
+      },
     },
     birthDate: {
       type: Date,
-      default: "",
+      default: null,
     },
     hireDate: {
       type: Date,
-      default: "",
+      default: null,
     },
     contactType: {
       type: String,
@@ -52,34 +88,24 @@ const contactSchema = new Schema(
     },
     department: {
       type: String,
-      default: "",
+      default: null,
     },
     position: {
       type: String,
-      default: "",
-    },
-    email: {
-      type: String,
-      default: "",
+      default: null,
     },
     phones: [phoneSchema],
+    emails: {
+      type: [emailSchema],
+      default: [],
+    },
     socials: {
-      linkedIn: String,
-      facebook: String,
-      telegram: String,
+      type: [socialSchema],
+      default: [],
     },
     isActive: {
       type: Boolean,
       default: false,
-    },
-    // isPublic: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-    status: {
-      type: String,
-      enum: employeeStatusList,
-      default: "not specified",
     },
     sharedWorkspaces: [
       {

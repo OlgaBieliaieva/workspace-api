@@ -5,6 +5,7 @@ import HttpError from "../helpers/HttpErrors.js";
 import compareHash from "../helpers/compareHash.js";
 import { createToken } from "../helpers/jwt.js";
 import cloudinary from "../helpers/cloudinary.js";
+import { employeeStatusList } from "../constants/employeeConstants.js";
 
 const signup = async (req, res) => {
   const { email } = req.body;
@@ -32,6 +33,7 @@ const signup = async (req, res) => {
       id: newUser._id,
       name: newUser.name,
       email: newUser.email,
+      status: newUser.status,
       subscription: newUser.subscriptionType,
     },
   });
@@ -65,6 +67,7 @@ const signIn = async (req, res) => {
       name: user.name,
       email: user.email,
       avatar: user.avatar.avatarUrl,
+      status: user.status,
       subscription: user.subscriptionType,
     },
   });
@@ -76,6 +79,7 @@ const getCurrent = (req, res) => {
     name,
     email,
     avatar,
+    status,
     subscriptionType: subscription,
   } = req.user;
   res.json({
@@ -84,6 +88,7 @@ const getCurrent = (req, res) => {
       name,
       email,
       avatar: avatar.avatarUrl,
+      status,
       subscription,
     },
   });
@@ -96,7 +101,13 @@ const signOut = async (req, res) => {
 };
 
 const addAvatar = async (req, res) => {
-  const { _id: id, name, email, subscriptionType: subscription } = req.user;
+  const {
+    _id: id,
+    name,
+    email,
+    status,
+    subscriptionType: subscription,
+  } = req.user;
 
   if (!req.file) {
     throw HttpError(400, "File not uploaded");
@@ -124,8 +135,9 @@ const addAvatar = async (req, res) => {
         id,
         name,
         email,
-        subscription,
         avatar: newAvatarUrl,
+        status,
+        subscription,
       },
     });
   } catch (error) {
@@ -154,7 +166,6 @@ const updateSubscription = async (req, res) => {
   }
 
   try {
-    // Оновлення типу підписки користувача
     const updatedUser = await usersService.updateUser(
       { _id: id },
       { subscriptionType }
@@ -170,6 +181,46 @@ const updateSubscription = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         avatar: updatedUser.avatar.avatarUrl,
+        status: updatedUser.status,
+        subscription: updatedUser.subscriptionType,
+      },
+    });
+  } catch (error) {
+    throw HttpError(500, error.message);
+  }
+};
+
+const updateStatus = async (req, res) => {
+  const { _id: id } = req.user;
+  const { status } = req.body;
+
+  if (!status) {
+    throw HttpError(400, "Missing required field: status");
+  }
+
+  if (!employeeStatusList.includes(status)) {
+    throw HttpError(
+      400,
+      `Invalid subscription type. Allowed types: ${employeeStatusList.join(
+        ", "
+      )}`
+    );
+  }
+
+  try {
+    const updatedUser = await usersService.updateUser({ _id: id }, { status });
+
+    if (!updatedUser) {
+      throw HttpError(404, "User not found");
+    }
+
+    res.status(200).json({
+      user: {
+        id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        avatar: updatedUser.avatar.avatarUrl,
+        status: updatedUser.status,
         subscription: updatedUser.subscriptionType,
       },
     });
@@ -185,4 +236,5 @@ export default {
   signOut: ctrlWrapper(signOut),
   addAvatar: ctrlWrapper(addAvatar),
   updateSubscription: ctrlWrapper(updateSubscription),
+  updateStatus: ctrlWrapper(updateStatus),
 };

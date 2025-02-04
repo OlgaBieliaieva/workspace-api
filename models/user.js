@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Schema } from "mongoose";
 import { usersDB } from "../db.js";
-
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
+import { employeeStatusList } from "../constants/employeeConstants.js";
 
 const userSchema = new Schema(
   {
@@ -28,6 +28,11 @@ const userSchema = new Schema(
         type: String,
         default: null,
       },
+    },
+    status: {
+      type: String,
+      enum: employeeStatusList,
+      default: "not specified",
     },
     subscriptionType: {
       type: String,

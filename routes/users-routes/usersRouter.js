@@ -8,6 +8,7 @@ import {
   signUpUserSchema,
   signInUserSchema,
   updateUserSubscriptionSchema,
+  updateUserStatusSchema,
   //   updateEmployeeSchema,
   //   updateEmployeeStatusSchema,
   //   updateEmployeeGroupsSchema,
@@ -39,6 +40,13 @@ usersRouter.patch(
   authenticate,
   upload.single("avatar"),
   usersControllers.addAvatar
+);
+
+usersRouter.patch(
+  "/status",
+  authenticate,
+  validateBody(updateUserStatusSchema),
+  usersControllers.updateStatus
 );
 
 usersRouter.patch(
