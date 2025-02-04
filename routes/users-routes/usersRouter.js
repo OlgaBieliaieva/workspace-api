@@ -7,6 +7,7 @@ import validateBody from "../../helpers/validateBody.js";
 import {
   signUpUserSchema,
   signInUserSchema,
+  updateUserSubscriptionSchema,
   //   updateEmployeeSchema,
   //   updateEmployeeStatusSchema,
   //   updateEmployeeGroupsSchema,
@@ -38,6 +39,13 @@ usersRouter.patch(
   authenticate,
   upload.single("avatar"),
   usersControllers.addAvatar
+);
+
+usersRouter.patch(
+  "/subscription",
+  authenticate,
+  validateBody(updateUserSubscriptionSchema),
+  usersControllers.updateSubscription
 );
 
 // usersRouter.get("/", usersControllers.getAllUsers);

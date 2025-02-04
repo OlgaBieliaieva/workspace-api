@@ -135,10 +135,54 @@ const addAvatar = async (req, res) => {
   }
 };
 
+const updateSubscription = async (req, res) => {
+  const { _id: id } = req.user;
+  const { subscriptionType } = req.body;
+
+  if (!subscriptionType) {
+    throw HttpError(400, "Missing required field: subscriptionType");
+  }
+
+  const allowedSubscriptions = ["Free", "Premium"];
+  if (!allowedSubscriptions.includes(subscriptionType)) {
+    throw HttpError(
+      400,
+      `Invalid subscription type. Allowed types: ${allowedSubscriptions.join(
+        ", "
+      )}`
+    );
+  }
+
+  try {
+    // Оновлення типу підписки користувача
+    const updatedUser = await usersService.updateUser(
+      { _id: id },
+      { subscriptionType }
+    );
+
+    if (!updatedUser) {
+      throw HttpError(404, "User not found");
+    }
+
+    res.status(200).json({
+      user: {
+        id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        avatar: updatedUser.avatar.avatarUrl,
+        subscription: updatedUser.subscriptionType,
+      },
+    });
+  } catch (error) {
+    throw HttpError(500, error.message);
+  }
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signIn: ctrlWrapper(signIn),
   getCurrent: ctrlWrapper(getCurrent),
   signOut: ctrlWrapper(signOut),
   addAvatar: ctrlWrapper(addAvatar),
+  updateSubscription: ctrlWrapper(updateSubscription),
 };
