@@ -11,6 +11,7 @@ import {
   //   updateEmployeeStatusSchema,
   //   updateEmployeeGroupsSchema,
 } from "../../schemas/usersSchema.js";
+import upload from "../../middlewares/upload.js";
 
 const usersRouter = express.Router();
 
@@ -31,6 +32,13 @@ usersRouter.post(
 usersRouter.get("/current", authenticate, usersControllers.getCurrent);
 
 usersRouter.post("/signout", authenticate, usersControllers.signOut);
+
+usersRouter.patch(
+  "/avatar",
+  authenticate,
+  upload.single("avatar"),
+  usersControllers.addAvatar
+);
 
 // usersRouter.get("/", usersControllers.getAllUsers);
 

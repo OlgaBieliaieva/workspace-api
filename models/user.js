@@ -19,6 +19,16 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    avatar: {
+      avatarId: {
+        type: String,
+        default: null,
+      },
+      avatarUrl: {
+        type: String,
+        default: null,
+      },
+    },
     subscriptionType: {
       type: String,
       enum: ["Free", "Premium"],

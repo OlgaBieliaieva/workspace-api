@@ -1,8 +1,10 @@
+import fs from "fs/promises";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as usersService from "../services/usersServices.js";
 import HttpError from "../helpers/HttpErrors.js";
 import compareHash from "../helpers/compareHash.js";
 import { createToken } from "../helpers/jwt.js";
+import cloudinary from "../helpers/cloudinary.js";
 
 const signup = async (req, res) => {
   const { email } = req.body;
@@ -62,18 +64,26 @@ const signIn = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      avatar: user.avatar.avatarUrl,
       subscription: user.subscriptionType,
     },
   });
 };
 
 const getCurrent = (req, res) => {
-  const { _id: id, name, email, subscriptionType: subscription } = req.user;
+  const {
+    _id: id,
+    name,
+    email,
+    avatar,
+    subscriptionType: subscription,
+  } = req.user;
   res.json({
     user: {
-      name,
       id,
+      name,
       email,
+      avatar: avatar.avatarUrl,
       subscription,
     },
   });
@@ -85,9 +95,50 @@ const signOut = async (req, res) => {
   res.status(204).json();
 };
 
+const addAvatar = async (req, res) => {
+  const { _id: id, name, email, subscriptionType: subscription } = req.user;
+
+  if (!req.file) {
+    throw HttpError(400, "File not uploaded");
+  }
+
+  try {
+    const { public_id: newAvatarId, secure_url: newAvatarUrl } =
+      await cloudinary.uploader.upload(req.file.path, {
+        folder: "workspace_avatars",
+      });
+
+    const user = await usersService.findUser(id);
+
+    if (user.avatar?.avatarId) {
+      await cloudinary.uploader.destroy(user.avatar.avatarId);
+    }
+
+    await usersService.updateUser(
+      { _id: id },
+      { avatar: { avatarId: newAvatarId, avatarUrl: newAvatarUrl } }
+    );
+
+    res.status(200).json({
+      user: {
+        id,
+        name,
+        email,
+        subscription,
+        avatar: newAvatarUrl,
+      },
+    });
+  } catch (error) {
+    throw HttpError(400, error.message);
+  } finally {
+    await fs.unlink(req.file.path); // Видалення тимчасового файлу
+  }
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signIn: ctrlWrapper(signIn),
   getCurrent: ctrlWrapper(getCurrent),
   signOut: ctrlWrapper(signOut),
+  addAvatar: ctrlWrapper(addAvatar),
 };
