@@ -143,7 +143,7 @@ const addAvatar = async (req, res) => {
   } catch (error) {
     throw HttpError(400, error.message);
   } finally {
-    await fs.unlink(req.file.path); // Видалення тимчасового файлу
+    await fs.unlink(req.file.path);
   }
 };
 

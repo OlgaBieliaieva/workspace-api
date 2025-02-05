@@ -9,9 +9,6 @@ import {
   signInUserSchema,
   updateUserSubscriptionSchema,
   updateUserStatusSchema,
-  //   updateEmployeeSchema,
-  //   updateEmployeeStatusSchema,
-  //   updateEmployeeGroupsSchema,
 } from "../../schemas/usersSchema.js";
 import upload from "../../middlewares/upload.js";
 
@@ -55,35 +52,5 @@ usersRouter.patch(
   validateBody(updateUserSubscriptionSchema),
   usersControllers.updateSubscription
 );
-
-// usersRouter.get("/", usersControllers.getAllUsers);
-
-// usersRouter.get("/:id", isValidId, employeesControllers.getEmployeeById);
-
-// usersRouter.delete("/:id", isValidId, employeesControllers.deleteById);
-
-// usersRouter.put(
-//   "/:id",
-//   isValidId,
-//   isEmptyBody,
-//   validateBody(updateEmployeeSchema),
-//   employeesControllers.updateEmployee
-// );
-
-// usersRouter.patch(
-//   "/:id/status",
-//   isValidId,
-//   isEmptyBody,
-//   validateBody(updateEmployeeStatusSchema),
-//   employeesControllers.updateEmployeeStatus
-// );
-
-// usersRouter.patch(
-//   "/:id/groups",
-//   isValidId,
-//   isEmptyBody,
-//   validateBody(updateEmployeeGroupsSchema),
-//   employeesControllers.updateEmployeeGroups
-// );
 
 export default usersRouter;

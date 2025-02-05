@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 import { contactsDB } from "../db.js";
 import { handleSaveError, setUpdateSettings } from "./hooks.js";
 
-const phoneSchema = new mongoose.Schema(
+const phoneSchema = new Schema(
   {
     type: {
       type: String,
@@ -14,7 +14,7 @@ const phoneSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const emailSchema = new mongoose.Schema(
+const emailSchema = new Schema(
   {
     type: {
       type: String,
@@ -26,7 +26,7 @@ const emailSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const socialSchema = new mongoose.Schema(
+const socialSchema = new Schema(
   {
     platform: {
       type: String,
@@ -40,7 +40,7 @@ const socialSchema = new mongoose.Schema(
       ],
       required: true,
     },
-    url: { type: String, required: true },
+    link: { type: String, required: true },
   },
   { _id: false }
 );
@@ -80,7 +80,7 @@ const contactSchema = new Schema(
     contactType: {
       type: String,
       enum: ["employee", "client_person", "supplier_person"],
-      required: true,
+      required: [true, "Choose contact type"],
     },
     company: {
       type: Schema.Types.ObjectId,
@@ -105,7 +105,7 @@ const contactSchema = new Schema(
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     sharedWorkspaces: [
       {
@@ -116,7 +116,7 @@ const contactSchema = new Schema(
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
   },
   { versionKey: false, timestamps: true }

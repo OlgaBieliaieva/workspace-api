@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import "dotenv/config";
 
-// import employeesRouter from "./routes/contacts-routes/employeesRouter.js";
+import contactsRouter from "./routes/contacts-routes/contactsRouter.js";
 // import companiesRouter from "./routes/contacts-routes/companiesRouter.js";
 // import suppliersRouter from "./routes/contacts-routes/suppliersRouter.js";
 // import clientsRouter from "./routes/contacts-routes/clientsRouter.js";
@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.use("/api/users", usersRouter);
 
-// app.use("/api/contacts/employees", employeesRouter);
+app.use("/api/contacts/", contactsRouter);
 // app.use("/api/contacts/companies", companiesRouter);
 // app.use("/api/contacts/suppliers", suppliersRouter);
 // app.use("/api/contacts/clients", clientsRouter);

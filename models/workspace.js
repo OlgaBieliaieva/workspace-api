@@ -5,7 +5,7 @@ import { handleSaveError, setUpdateSettings } from "./hooks.js";
 const workspaceSchema = new Schema(
   {
     name: { type: String, required: true },
-    description: String,
+    description: { type: String, default: null },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
