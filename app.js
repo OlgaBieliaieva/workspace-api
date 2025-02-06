@@ -17,7 +17,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(morgan("tiny"));
-app.use(cors({ credentials: true }));
+app.use(cors({ origin: "*", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
