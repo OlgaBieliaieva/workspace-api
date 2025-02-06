@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 
 import contactsRouter from "./routes/contacts-routes/contactsRouter.js";
@@ -17,6 +18,7 @@ const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/users", usersRouter);
@@ -26,8 +28,6 @@ app.use("/api/contacts/", contactsRouter);
 // app.use("/api/contacts/suppliers", suppliersRouter);
 // app.use("/api/contacts/clients", clientsRouter);
 // app.use("/api/contacts/groups", groupsRouter);
-
-
 
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });

@@ -27,8 +27,14 @@ const signup = async (req, res) => {
   const token = createToken(payload);
   await usersService.updateUser({ _id: id }, { token });
 
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 3600000,
+    sameSite: "Strict",
+  });
+
   res.status(201).json({
-    token,
     user: {
       id: newUser._id,
       name: newUser.name,
@@ -60,8 +66,14 @@ const signIn = async (req, res) => {
   const token = createToken(payload);
   await usersService.updateUser({ _id: id }, { token });
 
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 3600000,
+    sameSite: "Strict",
+  });
+
   res.json({
-    token,
     user: {
       id: user._id,
       name: user.name,
@@ -97,6 +109,11 @@ const getCurrent = (req, res) => {
 const signOut = async (req, res) => {
   const { _id } = req.user;
   await usersService.updateUser({ _id }, { token: null });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
   res.status(204).json();
 };
 
