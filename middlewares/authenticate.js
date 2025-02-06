@@ -3,6 +3,8 @@ import { verifyToken } from "../helpers/jwt.js";
 import { findUser } from "../services/usersServices.js";
 
 const authenticate = async (req, res, next) => {
+  console.log(req);
+  
   // Перевірка наявності токена в cookies
   const token = req.cookies.token; // Зчитуємо токен з cookie
   if (!token) {
