@@ -30,8 +30,9 @@ const signup = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 3600000,
+    maxAge: 36000000,
     sameSite: "None",
+    // sameSite: "Strict",
   });
 
   res.status(201).json({
@@ -42,6 +43,7 @@ const signup = async (req, res) => {
       status: newUser.status,
       subscription: newUser.subscriptionType,
     },
+    statuses: employeeStatusList,
   });
 };
 
@@ -69,8 +71,9 @@ const signIn = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 3600000,
+    maxAge: 36000000,
     sameSite: "None",
+    // sameSite: "Strict",
   });
 
   res.json({
@@ -82,6 +85,7 @@ const signIn = async (req, res) => {
       status: user.status,
       subscription: user.subscriptionType,
     },
+    statuses: employeeStatusList,
   });
 };
 
@@ -103,6 +107,7 @@ const getCurrent = (req, res) => {
       status,
       subscription,
     },
+    statuses: employeeStatusList,
   });
 };
 
@@ -113,6 +118,7 @@ const signOut = async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
+    // sameSite: "Strict",
   });
   res.status(204).json();
 };
@@ -218,9 +224,7 @@ const updateStatus = async (req, res) => {
   if (!employeeStatusList.includes(status)) {
     throw HttpError(
       400,
-      `Invalid subscription type. Allowed types: ${employeeStatusList.join(
-        ", "
-      )}`
+      `Invalid status. Allowed values: ${employeeStatusList.join(", ")}`
     );
   }
 
@@ -236,10 +240,11 @@ const updateStatus = async (req, res) => {
         id,
         name: updatedUser.name,
         email: updatedUser.email,
-        avatar: updatedUser.avatar.avatarUrl,
+        avatar: updatedUser.avatar?.avatarUrl,
         status: updatedUser.status,
         subscription: updatedUser.subscriptionType,
       },
+      statuses: employeeStatusList,
     });
   } catch (error) {
     throw HttpError(500, error.message);
