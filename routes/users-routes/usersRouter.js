@@ -39,6 +39,13 @@ usersRouter.patch(
   usersControllers.addAvatar
 );
 
+usersRouter.delete(
+  "/avatar",
+  authenticate,
+  // upload.single("avatar"),
+  usersControllers.deleteAvatar
+);
+
 usersRouter.patch(
   "/status",
   authenticate,

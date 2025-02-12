@@ -124,13 +124,7 @@ const signOut = async (req, res) => {
 };
 
 const addAvatar = async (req, res) => {
-  const {
-    _id: id,
-    name,
-    email,
-    status,
-    subscriptionType: subscription,
-  } = req.user;
+  const { _id: id } = req.user;
 
   if (!req.file) {
     throw HttpError(400, "File not uploaded");
@@ -156,17 +150,43 @@ const addAvatar = async (req, res) => {
     res.status(200).json({
       user: {
         id,
-        name,
-        email,
         avatar: newAvatarUrl,
-        status,
-        subscription,
       },
     });
   } catch (error) {
     throw HttpError(400, error.message);
   } finally {
     await fs.unlink(req.file.path);
+  }
+};
+
+const deleteAvatar = async (req, res) => {
+  const { _id: id } = req.user;
+
+  const user = await usersService.findUser(id);
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  if (!user.avatar || !user.avatar.avatarId) {
+    throw HttpError(400, "No avatar to delete");
+  }
+
+  try {
+    await cloudinary.uploader.destroy(user.avatar.avatarId);
+    await usersService.updateUser(
+      { _id: id },
+      { avatar: { avatarId: null, avatarUrl: null } }
+    );
+
+    res.status(200).json({
+      user: {
+        id,
+        avatar: null,
+      },
+    });
+  } catch (error) {
+    throw HttpError(400, error.message);
   }
 };
 
@@ -257,6 +277,7 @@ export default {
   getCurrent: ctrlWrapper(getCurrent),
   signOut: ctrlWrapper(signOut),
   addAvatar: ctrlWrapper(addAvatar),
+  deleteAvatar: ctrlWrapper(deleteAvatar),
   updateSubscription: ctrlWrapper(updateSubscription),
   updateStatus: ctrlWrapper(updateStatus),
 };
