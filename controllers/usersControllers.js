@@ -221,10 +221,6 @@ const updateSubscription = async (req, res) => {
     res.status(200).json({
       user: {
         id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        avatar: updatedUser.avatar.avatarUrl,
-        status: updatedUser.status,
         subscription: updatedUser.subscriptionType,
       },
     });
@@ -258,11 +254,7 @@ const updateStatus = async (req, res) => {
     res.status(200).json({
       user: {
         id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        avatar: updatedUser.avatar?.avatarUrl,
         status: updatedUser.status,
-        subscription: updatedUser.subscriptionType,
       },
       statuses: employeeStatusList,
     });
