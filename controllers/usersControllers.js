@@ -271,6 +271,45 @@ const updateStatus = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  const { _id: id } = req.user;
+  const { name, email } = req.body;
+
+  if (!name && !email) {
+    throw HttpError(400, "At least one field (name or email) is required");
+  }
+
+  const existingUser = await usersService.findUser({ email });
+  if (existingUser && existingUser._id.toString() !== id.toString()) {
+    throw HttpError(409, "Email is already in use");
+  }
+
+  try {
+    const updatedUser = await usersService.updateUser(
+      { _id: id },
+      { name, email }
+    );
+
+    if (!updatedUser) {
+      throw HttpError(404, "User not found");
+    }
+
+    res.status(200).json({
+      user: {
+        id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        avatar: updatedUser.avatar?.avatarUrl,
+        status: updatedUser.status,
+        subscription: updatedUser.subscriptionType,
+      },
+      statuses: employeeStatusList,
+    });
+  } catch (error) {
+    throw HttpError(500, error.message);
+  }
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signIn: ctrlWrapper(signIn),
@@ -280,4 +319,5 @@ export default {
   deleteAvatar: ctrlWrapper(deleteAvatar),
   updateSubscription: ctrlWrapper(updateSubscription),
   updateStatus: ctrlWrapper(updateStatus),
+  updateProfile: ctrlWrapper(updateProfile),
 };

@@ -17,5 +17,18 @@ export const updateUserSubscriptionSchema = Joi.object({
 });
 
 export const updateUserStatusSchema = Joi.object({
-  status: Joi.string().valid(...employeeStatusList).required(),
+  status: Joi.string()
+    .valid(...employeeStatusList)
+    .required(),
 });
+
+export const updateProfileSchema = Joi.object({
+  name: Joi.string().min(3).max(50).required(),
+  email: Joi.string().email().messages({
+    "string.email": "Invalid email format",
+  }),
+})
+  .or("name", "email")
+  .messages({
+    "object.missing": "At least one field (name or email) is required",
+  });

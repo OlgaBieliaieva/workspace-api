@@ -9,6 +9,7 @@ import {
   signInUserSchema,
   updateUserSubscriptionSchema,
   updateUserStatusSchema,
+  updateProfileSchema,
 } from "../../schemas/usersSchema.js";
 import upload from "../../middlewares/upload.js";
 
@@ -39,12 +40,7 @@ usersRouter.patch(
   usersControllers.addAvatar
 );
 
-usersRouter.delete(
-  "/avatar",
-  authenticate,
-  // upload.single("avatar"),
-  usersControllers.deleteAvatar
-);
+usersRouter.delete("/avatar", authenticate, usersControllers.deleteAvatar);
 
 usersRouter.patch(
   "/status",
@@ -58,6 +54,13 @@ usersRouter.patch(
   authenticate,
   validateBody(updateUserSubscriptionSchema),
   usersControllers.updateSubscription
+);
+
+usersRouter.patch(
+  "/profile",
+  authenticate,
+  validateBody(updateProfileSchema),
+  usersControllers.updateProfile
 );
 
 export default usersRouter;
