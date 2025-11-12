@@ -13,10 +13,16 @@ import contactsRouter from "./routes/contacts-routes/contactsRouter.js";
 import usersRouter from "./routes/users-routes/usersRouter.js";
 
 const { PORT = 3000 } = process.env;
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://workspace-front.vercel.app",
+];
 
 const app = express();
 
 app.use(morgan("tiny"));
+app.use(cookieParser());
+app.use(express.json());
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -29,21 +35,10 @@ app.use(
     credentials: true,
   })
 );
-app.options(
-  "*",
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
-app.use(cookieParser());
-app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.use("/api/users", usersRouter);
 
