@@ -19,10 +19,13 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://phonebook-seven-beta.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
