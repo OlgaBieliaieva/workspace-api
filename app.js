@@ -15,7 +15,7 @@ import usersRouter from "./routes/users-routes/usersRouter.js";
 const { PORT = 3000 } = process.env;
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://workspace-front.vercel.app",
+  "https://phonebook-seven-beta.vercel.app",
 ];
 
 const app = express();
