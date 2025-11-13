@@ -12,4 +12,8 @@ export const getAll = (search = {}) => {
   return Contact.find(filter, fields, settings);
 };
 
+export const count = async (filter) => {
+  return Contact.countDocuments(filter);
+};
+
 export const removeContact = (filter) => Contact.findOneAndDelete(filter);

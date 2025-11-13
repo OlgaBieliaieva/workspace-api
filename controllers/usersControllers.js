@@ -31,8 +31,8 @@ const signup = async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 36000000,
-    sameSite: "None",
-    // sameSite: "Strict",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    partitioned: true,
   });
 
   res.status(201).json({
@@ -72,8 +72,8 @@ const signIn = async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 36000000,
-    sameSite: "None",
-    // sameSite: "Strict",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    // partitioned: true,
   });
 
   res.json({
@@ -117,8 +117,8 @@ const signOut = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "None",
-    // sameSite: "Strict",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    // partitioned: true,
   });
   res.status(204).json();
 };

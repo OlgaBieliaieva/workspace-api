@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 
 app.use("/api/users", usersRouter);
 
-app.use("/api/contacts/", contactsRouter);
+app.use("/api/contacts", contactsRouter);
 // app.use("/api/contacts/companies", companiesRouter);
 // app.use("/api/contacts/suppliers", suppliersRouter);
 // app.use("/api/contacts/clients", clientsRouter);
