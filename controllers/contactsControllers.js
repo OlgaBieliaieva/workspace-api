@@ -160,14 +160,29 @@ const updateContact = async (req, res) => {
   }
 };
 const getAll = async (req, res) => {
-  const { page = 1, limit = 20, ...params } = req.query;
+  const { page = 1, limit = 20, filter = "" } = req.query;
   const { _id: userId } = req.user;
-  const filter = { ...params, createdBy: userId };
   const fields = "-createdAt -updatedAt";
   const skip = (page - 1) * limit;
   const settings = { skip, limit: parseInt(limit, 10) };
+
+  const filterQuery = {
+    createdBy: userId,
+    ...(filter
+      ? {
+          $or: [
+            { firstName: { $regex: filter, $options: "i" } },
+            { middleName: { $regex: filter, $options: "i" } },
+            { lastName: { $regex: filter, $options: "i" } },
+            { department: { $regex: filter, $options: "i" } },
+            { position: { $regex: filter, $options: "i" } },
+          ],
+        }
+      : {}),
+  };
+
   const result = await contactsService.getAll({
-    filter,
+    filter: filterQuery,
     fields,
     settings,
   });
