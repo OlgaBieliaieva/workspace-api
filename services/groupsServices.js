@@ -5,6 +5,10 @@ export function getAll(search = {}) {
   return Group.find(filter, fields, settings);
 }
 
+export const count = async (filter) => {
+  return Group.countDocuments(filter);
+};
+
 export async function getById(filter) {
   const result = await Group.findOne(filter);
   return result;

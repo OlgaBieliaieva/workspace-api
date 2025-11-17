@@ -186,7 +186,7 @@ const getAll = async (req, res) => {
     fields,
     settings,
   });
-  const total = await contactsService.count(filter);
+  const total = await contactsService.count(filterQuery);
   res.status(200).json({
     total,
     page: Number(page),

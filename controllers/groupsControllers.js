@@ -2,17 +2,38 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import * as groupsService from "../services/groupsServices.js";
 
 const getAll = async (req, res) => {
-  const { page = 1, limit = 20, ...params } = req.query;
-  const filter = { ...params };
+  const { page = 1, limit = 20, filter = "" } = req.query;
+  const { _id: userId } = req.user;
   const fields = "-createdAt -updatedAt";
   const skip = (page - 1) * limit;
-  const settings = { skip, limit };
+  const settings = { skip, limit: parseInt(limit, 10) };
+
+  const filterQuery = {
+    createdBy: userId,
+    ...(filter
+      ? {
+          $or: [
+            { groupName: { $regex: filter, $options: "i" } },
+            { groupDescription: { $regex: filter, $options: "i" } },
+          ],
+        }
+      : {}),
+  };
+
   const result = await groupsService.getAll({
-    filter,
+    filter: filterQuery,
     fields,
     settings,
   });
-  res.json(result);
+
+  const total = await groupsService.count(filterQuery);
+
+  res.status(200).json({
+    total,
+    page: Number(page),
+    limit: Number(limit),
+    result,
+  });
 };
 
 const getGroupById = async (req, res) => {

@@ -1,4 +1,5 @@
 import express from "express";
+import authenticate from "../../middlewares/authenticate.js";
 import groupsControllers from "../../controllers/groupsControllers.js";
 import isEmptyBody from "../../middlewares/isEmptyBody.js";
 import isValidId from "../../middlewares/isValidId.js";
@@ -10,7 +11,7 @@ import {
 
 const groupsRouter = express.Router();
 
-groupsRouter.get("/", groupsControllers.getAll);
+groupsRouter.get("/", authenticate, groupsControllers.getAll);
 
 groupsRouter.get("/:id", isValidId, groupsControllers.getGroupById);
 

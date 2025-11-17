@@ -4,13 +4,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 
+import usersRouter from "./routes/users-routes/usersRouter.js";
 import contactsRouter from "./routes/contacts-routes/contactsRouter.js";
+import groupsRouter from "./routes/contacts-routes/groupsRouter.js";
 // import companiesRouter from "./routes/contacts-routes/companiesRouter.js";
 // import suppliersRouter from "./routes/contacts-routes/suppliersRouter.js";
 // import clientsRouter from "./routes/contacts-routes/clientsRouter.js";
-// import groupsRouter from "./routes/contacts-routes/groupsRouter.js";
-
-import usersRouter from "./routes/users-routes/usersRouter.js";
 
 const { PORT = 3000 } = process.env;
 const allowedOrigins = [
@@ -42,11 +41,11 @@ app.use((req, res, next) => {
 
 app.use("/api/users", usersRouter);
 
-app.use("/api/contacts", contactsRouter);
+app.use("/api/people/contacts", contactsRouter);
+app.use("/api/people/groups", groupsRouter);
 // app.use("/api/contacts/companies", companiesRouter);
 // app.use("/api/contacts/suppliers", suppliersRouter);
 // app.use("/api/contacts/clients", clientsRouter);
-// app.use("/api/contacts/groups", groupsRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Not found" });
