@@ -5,6 +5,7 @@ import { findUser } from "../services/usersServices.js";
 const authenticate = async (req, res, next) => {
   // Перевірка наявності токена в cookies
   const token = req.cookies.token; // Зчитуємо токен з cookie
+
   if (!token) {
     return next(HttpError(401, "Authorization token not found in cookies"));
   }

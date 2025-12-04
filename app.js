@@ -7,6 +7,7 @@ import "dotenv/config";
 import usersRouter from "./routes/users-routes/usersRouter.js";
 import contactsRouter from "./routes/contacts-routes/contactsRouter.js";
 import groupsRouter from "./routes/contacts-routes/groupsRouter.js";
+import tagsRouter from "./routes/tagsRouter.js";
 // import companiesRouter from "./routes/contacts-routes/companiesRouter.js";
 // import suppliersRouter from "./routes/contacts-routes/suppliersRouter.js";
 // import clientsRouter from "./routes/contacts-routes/clientsRouter.js";
@@ -43,6 +44,7 @@ app.use("/api/users", usersRouter);
 
 app.use("/api/people/contacts", contactsRouter);
 app.use("/api/people/groups", groupsRouter);
+app.use("/api/tags", tagsRouter);
 // app.use("/api/contacts/companies", companiesRouter);
 // app.use("/api/contacts/suppliers", suppliersRouter);
 // app.use("/api/contacts/clients", clientsRouter);
