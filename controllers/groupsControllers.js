@@ -4,9 +4,9 @@ import * as groupsService from "../services/groupsServices.js";
 const getAll = async (req, res) => {
   const { page = 1, limit = 20, filter = "" } = req.query;
   const { _id: userId } = req.user;
-  const fields = "-createdAt -updatedAt";
   const skip = (page - 1) * limit;
   const settings = { skip, limit: parseInt(limit, 10) };
+  const fields = "-createdAt -updatedAt";
 
   const filterQuery = {
     createdBy: userId,
@@ -25,7 +25,6 @@ const getAll = async (req, res) => {
     fields,
     settings,
   });
-
   const total = await groupsService.count(filterQuery);
 
   res.status(200).json({

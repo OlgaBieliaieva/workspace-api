@@ -7,8 +7,7 @@ export const addTag = (data) => Tag.create(data);
 export const updateTagById = (filter, data) =>
   Tag.findOneAndUpdate(filter, data);
 
-export const getAll = (search = {}) => {
-  const { filter = {}, fields = "", settings = {} } = search;
+export const getAll = ({ filter = {}, fields = "", settings = {} }) => {
   return Tag.find(filter, fields, settings);
 };
 

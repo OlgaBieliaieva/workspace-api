@@ -3,7 +3,6 @@ import * as tagsService from "../services/tagsServices.js";
 import HttpError from "../helpers/HttpErrors.js";
 
 const createTag = async (req, res) => {
-  console.log("REQ.USER IN CONTROLLER:", req.user);
   const { _id: userId } = req.user;
   const data = req.body;
 
@@ -26,25 +25,35 @@ const createTag = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
+  const { page = 1, limit = 20, filter = "", module = null } = req.query;
   const { _id: userId } = req.user;
-  const { module = null, page = 1, limit = 20 } = req.query;
-
   const skip = (page - 1) * limit;
-
-  const filter = {
-    user: userId,
-    ...(module ? { modules: module } : {}),
-  };
-
+  const settings = { skip, limit: Number(limit) };
   const fields = "-createdAt -updatedAt";
 
-  const settings = {
-    skip,
-    limit: Number(limit),
+  const moduleFilter = module
+    ? { modules: { $in: Array.isArray(module) ? module : [module] } }
+    : {};
+
+  const filterQuery = {
+    user: userId,
+    ...moduleFilter,
+    ...(filter
+      ? {
+          $or: [
+            { name: { $regex: filter, $options: "i" } },
+            { description: { $regex: filter, $options: "i" } },
+          ],
+        }
+      : {}),
   };
 
-  const tags = await tagsService.getAll({ filter, fields, settings });
-  const total = await tagsService.count(filter);
+  const tags = await tagsService.getAll({
+    filter: filterQuery,
+    fields,
+    settings,
+  });
+  const total = await tagsService.count(filterQuery);
 
   res.status(200).json({
     total,

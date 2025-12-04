@@ -162,10 +162,11 @@ const updateContact = async (req, res) => {
 const getAll = async (req, res) => {
   const { page = 1, limit = 20, filter = "" } = req.query;
   const { _id: userId } = req.user;
-  const fields = "-createdAt -updatedAt";
   const skip = (page - 1) * limit;
   const settings = { skip, limit: parseInt(limit, 10) };
+  const fields = "-createdAt -updatedAt";
 
+  // Фільтр по всіх полях
   const filterQuery = {
     createdBy: userId,
     ...(filter
@@ -176,6 +177,9 @@ const getAll = async (req, res) => {
             { lastName: { $regex: filter, $options: "i" } },
             { department: { $regex: filter, $options: "i" } },
             { position: { $regex: filter, $options: "i" } },
+            // Телефони та емейли теж можна шукати
+            { "phones.number": { $regex: filter, $options: "i" } },
+            { "emails.address": { $regex: filter, $options: "i" } },
           ],
         }
       : {}),
@@ -187,6 +191,7 @@ const getAll = async (req, res) => {
     settings,
   });
   const total = await contactsService.count(filterQuery);
+
   res.status(200).json({
     total,
     page: Number(page),
